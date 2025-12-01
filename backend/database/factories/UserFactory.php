@@ -1,0 +1,98 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ */
+class UserFactory extends Factory
+{
+    /**
+     * The current password being used by the factory.
+     */
+    protected static ?string $password = null;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => static::$password ??= Hash::make('password'),
+            'role' => User::ROLE_SDM,
+            'employee_id' => fake()->unique()->numerify('EMP####'),
+            'is_active' => true,
+            'remember_token' => Str::random(10),
+        ];
+    }
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     */
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a Dekan.
+     */
+    public function dekan(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_DEKAN,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a Unit head.
+     */
+    public function unit(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_UNIT,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is SDM.
+     */
+    public function sdm(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_SDM,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is Admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_ADMIN,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is inactive.
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
+    }
+}

@@ -1,0 +1,418 @@
+# ITS (Integrated Task System)
+
+Sistem manajemen tugas terintegrasi untuk Fakultas Kedokteran dan Kesehatan (FKK) Universitas Muhammadiyah Jakarta.
+
+## 📋 Deskripsi
+
+ITS (Integrated Task System) adalah aplikasi web berbasis **Laravel 12** (Backend) dan **React 19 + TypeScript** (Frontend) yang dirancang untuk mengelola dan memantau penugasan di lingkungan fakultas. Sistem ini mendukung multi-role dengan dashboard khusus untuk setiap peran pengguna.
+
+## ✨ Fitur Utama
+
+### 🔐 Authentication & Authorization
+
+- ✅ **Multi-role Authentication** - Admin, Dekan, Unit, SDM
+- ✅ **Single Device Enforcement** - Satu akun hanya bisa login di satu perangkat
+- ✅ **Force Logout** - Kemampuan untuk logout dari perangkat lain
+- ✅ **Token-based Authentication** - Laravel Sanctum dengan auto-refresh
+- ✅ **Password Reset dengan OTP** - Reset password via email OTP
+- ✅ **Session Management** - Tracking aktif session per user
+
+### 👤 User Management
+
+- ✅ **Profile Management** - Edit informasi pribadi (nama, email, username, telepon)
+- ✅ **Avatar Upload** - Upload dan hapus foto profil
+- ✅ **Password Change** - Ubah password dengan validasi kuat
+- ✅ **Phone Number Formatting** - Format otomatis nomor telepon Indonesia
+
+### 📊 Dashboard Berbasis Role
+
+#### Admin Dashboard
+- Overview sistem lengkap
+- Statistik pengguna, tugas, dan unit
+- Monitoring sesi aktif
+- Grafik performa bulanan
+- Tabel tugas dan aktivitas
+
+#### Dekan Dashboard
+- Overview tugas fakultas
+- Statistik tugas per unit
+- Grafik progress tugas
+- Daftar tugas prioritas tinggi
+- Aktivitas terbaru
+
+#### Unit Dashboard
+- Overview tugas unit
+- Statistik tugas per status
+- Grafik distribusi tugas
+- Daftar tugas yang ditugaskan
+- Progress tracking
+
+#### SDM Dashboard
+- To-do list pribadi
+- Tugas aktif dan selesai
+- Deadline terdekat
+- Riwayat tugas selesai
+- Statistik produktivitas
+
+### 🎨 UI/UX Features
+
+- ✅ **Dark Mode Support** - Tema gelap dan terang
+- ✅ **Responsive Design** - Mobile, tablet, desktop
+- ✅ **Toast Notifications** - Notifikasi sukses yang smooth
+- ✅ **Loading States** - Feedback visual untuk semua operasi
+- ✅ **Error Handling** - Error messages yang user-friendly
+- ✅ **Animations** - Transisi dan animasi yang halus
+
+### 🔒 Security Features
+
+- ✅ **Strong Password Policy** - Minimal 8 karakter dengan kompleksitas
+- ✅ **Rate Limiting** - Proteksi terhadap brute force
+- ✅ **Security Headers** - XSS, CSRF, Clickjacking protection
+- ✅ **Input Validation** - Validasi di frontend dan backend
+- ✅ **File Upload Security** - Validasi tipe, ukuran, dan dimensi file
+
+### ⚡ Performance
+
+- ✅ **Database Caching** - Cache user data untuk performa optimal
+- ✅ **Database Indexing** - Indexes untuk query yang cepat
+- ✅ **Eager Loading** - Mengurangi N+1 queries
+- ✅ **Code Splitting** - Optimasi bundle size
+- ✅ **Lazy Loading** - Route-based code splitting
+
+## 🏗️ Arsitektur
+
+### Tech Stack
+
+**Backend:**
+- Laravel 12
+- PHP 8.2+
+- MySQL/MariaDB
+- Laravel Sanctum (Authentication)
+- Pest PHP (Testing)
+
+**Frontend:**
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Axios
+
+### Project Structure
+
+```
+its-fkk/
+├── backend/              # Laravel API
+│   ├── app/
+│   │   ├── Http/
+│   │   │   ├── Controllers/
+│   │   │   ├── Middleware/
+│   │   │   └── Requests/
+│   │   ├── Models/
+│   │   └── Mail/
+│   ├── database/
+│   │   ├── migrations/
+│   │   └── seeders/
+│   ├── routes/
+│   └── tests/
+│
+├── frontend/             # React Application
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── utils/
+│   └── public/
+│
+└── README.md            # Dokumentasi utama (file ini)
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- PHP >= 8.2
+- Composer
+- Node.js >= 18
+- MySQL/MariaDB
+- Git
+
+### Installation
+
+1. **Clone Repository**
+
+```bash
+git clone https://github.com/your-username/its-fkk.git
+cd its-fkk
+```
+
+2. **Setup Backend**
+
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+
+# Edit .env file dengan konfigurasi database Anda
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+```
+
+3. **Setup Frontend**
+
+```bash
+cd ../frontend
+npm install
+npm run setup:dev
+```
+
+4. **Run Development Servers**
+
+```bash
+# Terminal 1 - Backend
+cd backend
+composer run dev
+
+# Terminal 2 - Frontend
+cd frontend
+npm run dev
+```
+
+5. **Akses Aplikasi**
+
+- Frontend: `http://localhost:5173`
+- Backend API: `http://127.0.0.1:8000`
+
+## 👥 Default Users
+
+Setelah menjalankan seeder, gunakan akun berikut untuk login:
+
+| Role | Email | Password | Username |
+|------|-------|----------|----------|
+| **Admin** | admin@umj.ac.id | admin123 | admin |
+| **Dekan** | dekan@umj.ac.id | dekan123 | dekan |
+| **Unit** | unit@umj.ac.id | unit123 | unit |
+| **SDM** | sdm@umj.ac.id | sdm123 | sdm |
+
+**⚠️ PENTING**: Ganti semua password default sebelum deployment ke production!
+
+## 📚 Dokumentasi
+
+### Backend Documentation
+
+Lihat [`backend/README.md`](./backend/README.md) untuk:
+- API endpoints lengkap
+- Authentication guide
+- Database setup
+- Testing guide
+- Deployment checklist
+
+### Frontend Documentation
+
+Lihat [`frontend/README.md`](./frontend/README.md) untuk:
+- Project structure
+- Component usage
+- API integration
+- Development guide
+
+## 🔌 API Endpoints
+
+### Public Endpoints
+
+- `POST /api/auth/login` - User login
+- `POST /api/auth/check-session` - Check active session
+- `POST /api/auth/password/reset/request` - Request OTP
+- `POST /api/auth/password/reset/verify` - Verify OTP
+- `POST /api/auth/password/reset` - Reset password
+
+### Protected Endpoints
+
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/refresh` - Refresh token
+- `POST /api/auth/logout` - Logout
+- `PUT /api/auth/profile` - Update profile
+- `PUT /api/auth/change-password` - Change password
+- `POST /api/auth/avatar` - Upload avatar
+- `DELETE /api/auth/avatar` - Delete avatar
+
+**Lihat [`backend/README.md`](./backend/README.md) untuk dokumentasi API lengkap.**
+
+## 🧪 Testing
+
+### Backend Tests
+
+```bash
+cd backend
+php artisan test
+```
+
+### Frontend Tests
+
+```bash
+cd frontend
+npm run test
+```
+
+## 🛠️ Development
+
+### Code Quality
+
+**Backend:**
+```bash
+cd backend
+vendor/bin/pint
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run lint
+```
+
+### Environment Variables
+
+**Backend** (`.env`):
+```env
+APP_NAME="ITS"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=its_fkk
+DB_USERNAME=root
+DB_PASSWORD=
+
+CACHE_STORE=database
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_FROM_ADDRESS="noreply@umj.ac.id"
+MAIL_FROM_NAME="ITS"
+
+FRONTEND_URL=http://localhost:5173
+SANCTUM_STATEFUL_DOMAINS=localhost,localhost:5173,127.0.0.1,127.0.0.1:8000
+```
+
+**Frontend** (`env.development`):
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+NODE_ENV=development
+```
+
+## 🚀 Deployment
+
+### Production Checklist
+
+**Backend:**
+- [ ] Set `APP_ENV=production`
+- [ ] Set `APP_DEBUG=false`
+- [ ] Generate new `APP_KEY`
+- [ ] Setup database production
+- [ ] Configure mail settings
+- [ ] Run `php artisan config:cache`
+- [ ] Run `php artisan route:cache`
+- [ ] Run `php artisan view:cache`
+- [ ] Setup HTTPS
+- [ ] Configure CORS origins
+
+**Frontend:**
+- [ ] Update `env.production` dengan production API URL
+- [ ] Run `npm run build:prod`
+- [ ] Deploy `dist/` folder ke web server
+- [ ] Configure reverse proxy (jika perlu)
+
+### Build Commands
+
+**Backend:**
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+**Frontend:**
+```bash
+npm run setup:prod
+npm run build
+```
+
+## 📊 Database Schema
+
+### Main Tables
+
+- `users` - User accounts dengan role-based access
+- `active_sessions` - Tracking active sessions per user
+- `password_reset_otps` - OTP untuk password reset
+- `personal_access_tokens` - Sanctum tokens
+- `cache` - Database cache storage
+
+**Lihat [`backend/database/migrations/`](./backend/database/migrations/) untuk schema lengkap.**
+
+## 🔒 Security
+
+### Implemented Security Features
+
+- ✅ Password hashing dengan bcrypt
+- ✅ CSRF protection
+- ✅ XSS protection
+- ✅ SQL injection prevention (Eloquent ORM)
+- ✅ Rate limiting pada sensitive endpoints
+- ✅ Input validation & sanitization
+- ✅ File upload validation
+- ✅ Security headers
+- ✅ Single device enforcement
+- ✅ Token expiration & refresh
+
+## 📈 Performance Optimizations
+
+- ✅ Database caching (5 menit TTL)
+- ✅ Database indexes untuk query optimization
+- ✅ Eager loading untuk relationships
+- ✅ Code splitting di frontend
+- ✅ Asset optimization
+- ✅ Lazy loading routes
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+### Commit Guidelines
+
+- Use clear and descriptive commit messages
+- Follow conventional commits format
+- One feature per commit
+- Test before committing
+
+## 📝 License
+
+MIT License - see [LICENSE.md](./frontend/LICENSE.md) for details
+
+## 👨‍💻 Authors
+
+- **Development Team** - FKK UMJ
+
+## 🙏 Acknowledgments
+
+- Laravel Framework
+- React Team
+- All contributors
+
+## 📞 Support
+
+Untuk pertanyaan atau support, hubungi tim development atau buat issue di repository ini.
+
+---
+
+**ITS (Integrated Task System)** - Sistem Manajemen Tugas Terintegrasi untuk FKK UMJ
+

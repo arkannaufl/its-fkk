@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasApiTokens, HasFactory, Notifiable;
+
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_DEKAN = 'dekan';
+    public const ROLE_UNIT = 'unit';
+    public const ROLE_SDM = 'sdm';
+
+    public const ROLES = [
+        self::ROLE_ADMIN,
+        self::ROLE_DEKAN,
+        self::ROLE_UNIT,
+        self::ROLE_SDM,
+    ];
+
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'phone',
+        'avatar',
+        'password',
+        'role',
+        'employee_id',
+        'is_active',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_active' => 'boolean',
+        ];
+    }
+
+    public function activeSessions(): HasMany
+    {
+        return $this->hasMany(ActiveSession::class);
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    public function isDekan(): bool
+    {
+        return $this->hasRole(self::ROLE_DEKAN);
+    }
+
+    public function isUnit(): bool
+    {
+        return $this->hasRole(self::ROLE_UNIT);
+    }
+
+    public function isSdm(): bool
+    {
+        return $this->hasRole(self::ROLE_SDM);
+    }
+
+    public function getDashboardRoute(): string
+    {
+        return match ($this->role) {
+            self::ROLE_DEKAN => '/dekan',
+            self::ROLE_UNIT => '/unit',
+            self::ROLE_SDM => '/sdm',
+            default => '/sdm',
+        };
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function (User $user) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+        });
+
+        static::updating(function (User $user) {
+            if ($user->isDirty('avatar')) {
+                $oldAvatar = $user->getOriginal('avatar');
+                if ($oldAvatar && $oldAvatar !== $user->avatar && Storage::disk('public')->exists($oldAvatar)) {
+                    Storage::disk('public')->delete($oldAvatar);
+                }
+            }
+        });
+    }
+}
