@@ -29,6 +29,13 @@ return new class extends Migration
             $table->index('is_active');
             $table->index('parent_unit_id');
         });
+
+        // Add foreign key constraint for users.unit_id after units table is created
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreign('unit_id')->references('id')->on('units')->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -36,6 +43,13 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Drop foreign key constraint before dropping units table
+        if (Schema::hasTable('users') && Schema::hasColumn('users', 'unit_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropForeign(['unit_id']);
+            });
+        }
+        
         Schema::dropIfExists('units');
     }
 };

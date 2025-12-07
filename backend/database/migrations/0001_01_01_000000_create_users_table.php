@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->enum('role', ['admin', 'dekan', 'unit', 'sdm'])->default('sdm');
+            $table->enum('role', ['admin', 'dekan', 'wadek', 'unit', 'sdm'])->default('sdm');
+            $table->unsignedBigInteger('unit_id')->nullable()->after('role');
+            $table->timestamp('assigned_at')->nullable()->after('unit_id');
             $table->string('employee_id')->nullable()->unique();
             $table->boolean('is_active')->default(true);
             $table->string('password');
@@ -29,6 +31,7 @@ return new class extends Migration
             // Indexes for performance
             $table->index('is_active');
             $table->index('role');
+            $table->index('unit_id');
             // Composite index for common query pattern (email + is_active)
             $table->index(['email', 'is_active']);
             // Composite index for username + is_active lookup
