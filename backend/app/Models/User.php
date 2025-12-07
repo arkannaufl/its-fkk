@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,12 +17,14 @@ class User extends Authenticatable
 
     public const ROLE_ADMIN = 'admin';
     public const ROLE_DEKAN = 'dekan';
+    public const ROLE_WADEK = 'wadek';
     public const ROLE_UNIT = 'unit';
     public const ROLE_SDM = 'sdm';
 
     public const ROLES = [
         self::ROLE_ADMIN,
         self::ROLE_DEKAN,
+        self::ROLE_WADEK,
         self::ROLE_UNIT,
         self::ROLE_SDM,
     ];
@@ -35,6 +38,8 @@ class User extends Authenticatable
         'password',
         'role',
         'employee_id',
+        'unit_id',
+        'assigned_at',
         'is_active',
     ];
 
@@ -49,12 +54,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'assigned_at' => 'datetime',
         ];
     }
 
     public function activeSessions(): HasMany
     {
         return $this->hasMany(ActiveSession::class);
+    }
+
+    /**
+     * Relasi ke unit
+     */
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     /**
@@ -106,14 +120,39 @@ class User extends Authenticatable
         return $this->hasRole(self::ROLE_SDM);
     }
 
+    public function isWadek(): bool
+    {
+        return $this->hasRole(self::ROLE_WADEK);
+    }
+
     public function getDashboardRoute(): string
     {
         return match ($this->role) {
             self::ROLE_DEKAN => '/dekan',
+            self::ROLE_WADEK => '/wadek',
             self::ROLE_UNIT => '/unit',
             self::ROLE_SDM => '/sdm',
             default => '/sdm',
         };
+    }
+
+    /**
+     * Scope untuk mendapatkan user yang belum di-assign ke unit
+     */
+    public function scopeUnassigned($query)
+    {
+        return $query->whereNull('unit_id');
+    }
+
+    /**
+     * Assign user ke unit
+     */
+    public function assignToUnit(?Unit $unit): void
+    {
+        $this->unit_id = $unit?->id;
+        $this->role = $unit?->role ?? self::ROLE_SDM;
+        $this->assigned_at = $unit ? now() : null;
+        $this->save();
     }
 
     protected static function boot(): void

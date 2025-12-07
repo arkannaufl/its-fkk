@@ -6,6 +6,7 @@ interface DashboardHeaderProps {
   icon: React.ReactNode;
   userName?: string;
   userRole?: string;
+  allowSubtitleWrap?: boolean;
 }
 
 export default function DashboardHeader({
@@ -14,6 +15,7 @@ export default function DashboardHeader({
   icon,
   userName = "User",
   userRole = "user",
+  allowSubtitleWrap = false,
 }: DashboardHeaderProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -65,10 +67,10 @@ export default function DashboardHeader({
 
           {/* Title & Info */}
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-gray-800 dark:text-white sm:text-2xl">
+            <h1 className="text-lg font-bold text-gray-800 dark:text-white sm:text-xl">
               {title}
             </h1>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 truncate">
+            <p className={`mt-1 text-sm text-gray-500 dark:text-gray-400 ${allowSubtitleWrap ? 'leading-relaxed' : 'truncate'}`}>
               {subtitle}
             </p>
             <p className="mt-1 text-sm" aria-label={`Masuk sebagai ${userName} dengan role ${userRole}`}>

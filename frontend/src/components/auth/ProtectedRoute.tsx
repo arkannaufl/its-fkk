@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles?: ('admin' | 'dekan' | 'unit' | 'sdm')[];
+  allowedRoles?: ('admin' | 'dekan' | 'wadek' | 'unit' | 'sdm')[];
 }
 
 export default function ProtectedRoute({
@@ -36,12 +36,14 @@ export default function ProtectedRoute({
   return <>{children}</>;
 }
 
-export function getDashboardPath(role: 'admin' | 'dekan' | 'unit' | 'sdm'): string {
+export function getDashboardPath(role: 'admin' | 'dekan' | 'wadek' | 'unit' | 'sdm'): string {
   switch (role) {
     case 'admin':
       return '/admin';
     case 'dekan':
       return '/dekan';
+    case 'wadek':
+      return '/wadek';
     case 'unit':
       return '/unit';
     case 'sdm':

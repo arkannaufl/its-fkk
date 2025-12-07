@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OrganizationalChartController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,14 +52,21 @@ Route::middleware('throttle:120,1')->group(function () {
             Route::delete('/avatar', [AuthController::class, 'deleteAvatar'])->name('auth.delete-avatar');
         });
 
-        // Example: Role-protected routes
-        // Route::middleware('role:admin')->group(function () {
-        //     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
-        // });
-        //
-        // Route::middleware('role:admin,dekan')->group(function () {
-        //     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-        // });
+        // Organizational Chart Management - Admin only
+        Route::middleware('role:admin')->prefix('organizational-chart')->group(function () {
+            Route::get('/', [OrganizationalChartController::class, 'index'])->name('organizational-chart.index');
+            
+            // Unit management
+            Route::post('/units', [OrganizationalChartController::class, 'storeUnit'])->name('organizational-chart.units.store');
+            Route::put('/units/{unit}', [OrganizationalChartController::class, 'updateUnit'])->name('organizational-chart.units.update');
+            Route::delete('/units/{unit}', [OrganizationalChartController::class, 'destroyUnit'])->name('organizational-chart.units.destroy');
+            
+            // User management
+            Route::post('/users', [OrganizationalChartController::class, 'storeUser'])->name('organizational-chart.users.store');
+            Route::put('/users/{user}', [OrganizationalChartController::class, 'updateUser'])->name('organizational-chart.users.update');
+            Route::put('/users/{user}/assign', [OrganizationalChartController::class, 'assignUserToUnit'])->name('organizational-chart.users.assign');
+            Route::delete('/users/{user}', [OrganizationalChartController::class, 'destroyUser'])->name('organizational-chart.users.destroy');
+        });
     });
 });
 

@@ -12,7 +12,7 @@ export interface User {
   email: string;
   phone: string | null;
   avatar: string | null;
-  role: 'admin' | 'dekan' | 'unit' | 'sdm';
+  role: 'admin' | 'dekan' | 'wadek' | 'unit' | 'sdm';
   employee_id: string | null;
 }
 
@@ -463,6 +463,124 @@ export const authApi = {
     const response = await api.post<ApiResponse>('/auth/password/reset', data, {
       headers: { 'X-Skip-Refresh': 'true' },
     });
+    return response.data;
+  },
+};
+
+export const organizationalChartApi = {
+  getChart: async (): Promise<ApiResponse<{
+    units: Array<{
+      id: number;
+      code: string;
+      name: string;
+      type: string;
+      role: string;
+      parent_unit_id: number | null;
+      description: string | null;
+      position_x: number | null;
+      position_y: number | null;
+      is_active: boolean;
+      parent_unit?: unknown;
+      child_units?: unknown[];
+      users?: Array<{
+        id: number;
+        name: string;
+        email: string;
+        username: string | null;
+        employee_id: string | null;
+        role: string;
+      }>;
+    }>;
+    unassigned_users: Array<{
+      id: number;
+      name: string;
+      email: string;
+      username: string | null;
+      employee_id: string | null;
+      role: string;
+    }>;
+  }>> => {
+    const response = await api.get('/organizational-chart');
+    return response.data;
+  },
+
+  createUnit: async (data: {
+    code: string;
+    name: string;
+    type: 'wadek_i' | 'wadek_ii' | 'unit' | 'sdm';
+    parent_unit_id?: number | null;
+    role: 'admin' | 'dekan' | 'wadek' | 'unit' | 'sdm';
+    description?: string | null;
+    position_x?: number | null;
+    position_y?: number | null;
+    is_active?: boolean;
+  }): Promise<ApiResponse> => {
+    const response = await api.post('/organizational-chart/units', data);
+    return response.data;
+  },
+
+  updateUnit: async (unitId: number, data: {
+    code: string;
+    name: string;
+    type: 'wadek_i' | 'wadek_ii' | 'unit' | 'sdm';
+    parent_unit_id?: number | null;
+    role: 'admin' | 'dekan' | 'wadek' | 'unit' | 'sdm';
+    description?: string | null;
+    position_x?: number | null;
+    position_y?: number | null;
+    is_active?: boolean;
+  }): Promise<ApiResponse> => {
+    const response = await api.put(`/organizational-chart/units/${unitId}`, data);
+    return response.data;
+  },
+
+  deleteUnit: async (unitId: number): Promise<ApiResponse> => {
+    const response = await api.delete(`/organizational-chart/units/${unitId}`);
+    return response.data;
+  },
+
+  createUser: async (data: {
+    name: string;
+    username?: string | null;
+    email: string;
+    phone?: string | null;
+    password: string;
+    password_confirmation: string;
+    employee_id?: string | null;
+  }): Promise<ApiResponse> => {
+    const response = await api.post('/organizational-chart/users', data);
+    return response.data;
+  },
+
+  updateUser: async (userId: number, data: {
+    name: string;
+    username?: string | null;
+    email: string;
+    phone?: string | null;
+    password?: string;
+    password_confirmation?: string;
+    employee_id?: string | null;
+  }): Promise<ApiResponse> => {
+    const response = await api.put(`/organizational-chart/users/${userId}`, data);
+    return response.data;
+  },
+
+  assignUserToUnit: async (userId: number, data: {
+    unit_id?: number | null;
+    position_x?: number | null;
+    position_y?: number | null;
+  }): Promise<ApiResponse> => {
+    const response = await api.put(`/organizational-chart/users/${userId}/assign`, data);
+    return response.data;
+  },
+
+  unassignUser: async (userId: number): Promise<ApiResponse> => {
+    const response = await api.put(`/organizational-chart/users/${userId}/assign`, { unit_id: null });
+    return response.data;
+  },
+
+  deleteUser: async (userId: number): Promise<ApiResponse> => {
+    const response = await api.delete(`/organizational-chart/users/${userId}`);
     return response.data;
   },
 };

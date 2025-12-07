@@ -4,6 +4,7 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
+  GroupIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { useAuth } from "../context/AuthContext";
@@ -38,6 +39,15 @@ const AppSidebar: React.FC = () => {
           name: "Dashboard",
           path: getDashboardPath(user.role),
         },
+        ...(user.role === 'admin'
+          ? [
+              {
+                icon: <GroupIcon />,
+                name: "Struktur Organisasi",
+                path: "/admin/organizational-chart",
+              },
+            ]
+          : []),
       ]
     : [];
 

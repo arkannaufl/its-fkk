@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { CloseIcon } from '../../../icons';
-import { Toast as ToastType } from '../../../context/ToastContext';
+import { ToastWithType } from '../../../context/ToastContext';
 
 interface ToastProps {
-  toast: ToastType;
+  toast: ToastWithType;
   onClose: (id: string) => void;
 }
 

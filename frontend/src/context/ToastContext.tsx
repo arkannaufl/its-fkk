@@ -6,8 +6,12 @@ export interface Toast {
   duration?: number; // in milliseconds, default 3000
 }
 
+export interface ToastWithType extends Toast {
+  type?: 'success' | 'error' | 'info';
+}
+
 interface ToastContextType {
-  toasts: Toast[];
+  toasts: ToastWithType[];
   removeToast: (id: string) => void;
   showSuccess: (message: string, duration?: number) => void;
 }
@@ -15,7 +19,7 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<ToastWithType[]>([]);
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
@@ -24,7 +28,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const showSuccess = useCallback(
     (message: string, duration: number = 3000) => {
       const id = Math.random().toString(36).substring(2, 9);
-      const newToast: Toast = { id, message, duration };
+      const newToast: ToastWithType = { id, message, duration, type: 'success' };
 
       setToasts((prev) => [...prev, newToast]);
 

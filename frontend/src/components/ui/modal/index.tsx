@@ -77,7 +77,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div 
-      className={`fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999 transition-opacity duration-200 ${
+      className={`fixed inset-0 flex items-center justify-center overflow-y-auto custom-scrollbar modal z-99999 transition-opacity duration-200 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
